@@ -1,1 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contador — Prova Câmara de Seropédica</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f4f4f0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      color: #1a1a18;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #e0ded6;
+      border-radius: 16px;
+      padding: 2.5rem 2rem 2rem;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .label-top {
+      font-size: 13px;
+      color: #888780;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .titulo {
+      font-size: 17px;
+      font-weight: 500;
+      color: #2c2c2a;
+      margin-bottom: 1.75rem;
+    }
+
+    .dias-num {
+      font-size: 80px;
+      font-weight: 500;
+      line-height: 1;
+      color: #1a1a18;
+    }
+
+    .dias-label {
+      font-size: 18px;
+      color: #888780;
+      margin-top: 0.25rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .grid-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: #f4f4f0;
+      border-radius: 10px;
+      padding: 0.75rem 0.5rem;
+    }
+
+    .stat-num {
+      font-size: 20px;
+      font-weight: 500;
+      color: #1a1a18;
+    }
+
+    .stat-lbl {
+      font-size: 12px;
+      color: #888780;
+      margin-top: 2px;
+    }
+
+    .progress-wrap { margin-bottom: 1.25rem; }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #888780;
+      margin-bottom: 6px;
+    }
+
+    .progress-bar {
+      background: #e0ded6;
+      border-radius: 100px;
+      height: 6px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 100px;
+      background: #1D9E75;
+      transition: width 0.6s ease;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 13px;
+      padding: 5px 14px;
+      border-radius: 8px;
+      margin-bottom: 1.25rem;
+    }
+
+    .badge-ok   { background: #E1F5EE; color: #0F6E56; }
+    .badge-done { background: #FAECE7; color: #993C1D; }
+    .badge-hoje { background: #FAC775; color: #633806; }
+
+    .data-hoje {
+      font-size: 13px;
+      color: #888780;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="label-top">Concurso Público</div>
+    <div class="titulo">Câmara Municipal de Seropédica</div>
+
+    <div id="dias-num" class="dias-num">—</div>
+    <div class="dias-label">dias restantes</div>
+
+    <div class="grid-stats">
+      <div class="stat-card">
+        <div class="stat-num" id="semanas">—</div>
+        <div class="stat-lbl">semanas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="horas">—</div>
+        <div class="stat-lbl">horas aprox.</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="domingos">—</div>
+        <div class="stat-lbl">domingos</div>
+      </div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Hoje</span>
+        <span id="prog-pct"></span>
+      </div>
+      <div class="progress-label" style="margin-top:2px">
+        <span></span>
+        <span>02/08/2026 — dia da prova</span>
+      </div>
+      <div class="progress-bar" style="display:flex; background: transparent; gap:2px;">
+        <div id="prog-elapsed" style="height:6px; border-radius:100px; background:#E05C3A; transition: width 0.6s ease; width:0%"></div>
+        <div id="prog-fill"    style="height:6px; border-radius:100px; background:#1D9E75; transition: width 0.6s ease; width:100%"></div>
+      </div>
+    </div>
+
+    <div id="badge-status" class="badge badge-ok"></div>
+    <div class="data-hoje" id="data-hoje"></div>
+  </div>
+
+  <script>
+    const PROVA = new Date(2026, 7, 2); // 02 de agosto de 2026
+
+    function contaDomingos(inicio, fim) {
+      let count = 0;
+      let d = new Date(inicio);
+      d.setDate(d.getDate() + 1);
+      while (d <= fim) {
+        if (d.getDay() === 0) count++;
+        d.setDate(d.getDate() + 1);
+      }
+      return count;
+    }
+
+    function atualiza() {
+      const hoje = new Date();
+      hoje.setHours(0, 0, 0, 0);
+
+      const provaLocal = new Date(PROVA);
+      provaLocal.setHours(0, 0, 0, 0);
+
+      const diffMs = provaLocal - hoje;
+      const dias = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+      const numEl = document.getElementById('dias-num');
+      const badge = document.getElementById('badge-status');
+      const dataHojeEl = document.getElementById('data-hoje');
+
+      const dataFormatada = hoje.toLocaleDateString('pt-BR', {
+        weekday: 'long', day: '2-digit', month: 'long', year: 'numeric'
+      });
+      dataHojeEl.textContent = 'Hoje é ' + dataFormatada;
+
+      if (dias < 0) {
+        numEl.textContent = '0';
+        badge.textContent = 'A prova já aconteceu!';
+        badge.className = 'badge badge-done';
+        document.getElementById('semanas').textContent = '0';
+        document.getElementById('horas').textContent = '0';
+        document.getElementById('domingos').textContent = '0';
+        document.getElementById('prog-elapsed').style.width = '100%';
+        document.getElementById('prog-fill').style.width = '0%';
+        document.getElementById('prog-pct').textContent = '0% do tempo restante';
+      } else if (dias === 0) {
+        numEl.textContent = '0';
+        badge.textContent = 'É hoje! Boa prova!';
+        badge.className = 'badge badge-hoje';
+        document.getElementById('semanas').textContent = '0';
+        document.getElementById('horas').textContent = '0';
+        document.getElementById('domingos').textContent = '0';
+        document.getElementById('prog-elapsed').style.width = '100%';
+        document.getElementById('prog-fill').style.width = '0%';
+        document.getElementById('prog-pct').textContent = '0% do tempo restante';
+      } else {
+        numEl.textContent = dias;
+        document.getElementById('semanas').textContent = Math.floor(dias / 7);
+        document.getElementById('horas').textContent = (dias * 24).toLocaleString('pt-BR');
+        document.getElementById('domingos').textContent = contaDomingos(hoje, provaLocal);
+        badge.textContent = 'Faltam ' + dias + ' dias — bora estudar!';
+        badge.className = 'badge badge-ok';
+
+        const REF_INICIO = new Date(2026, 4, 1);
+        const totalRange = provaLocal - REF_INICIO;
+        const elapsed = hoje - REF_INICIO;
+        const pctDecorrido = Math.min(100, Math.max(0, Math.round((elapsed / totalRange) * 100)));
+        const pctRestante = 100 - pctDecorrido;
+        document.getElementById('prog-elapsed').style.width = pctDecorrido + '%';
+        document.getElementById('prog-fill').style.width = pctRestante + '%';
+        document.getElementById('prog-pct').textContent = pctRestante + '% do tempo restante';
+      }
+    }
+
+    atualiza();
+    setInterval(atualiza, 60000); // atualiza a cada minuto
+  </script>
+</body>
+</html>
 
