@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Concurso Câmara de Seropédica — Prova Adiada</title>
+<title>Concurso Câmara de Seropédica — Prova Remarcada</title>
 <style>
   :root {
     --paper: #EDE8DC;
@@ -83,11 +83,11 @@
     flex-direction: column;
     align-items: center;
     gap: 4px;
-    border: 3px solid var(--stamp);
+    border: 3px solid var(--ok);
     border-radius: 50% 48% 51% 49% / 49% 51% 48% 52%;
     padding: 1.2rem 2.2rem;
     transform: rotate(-6deg);
-    color: var(--stamp);
+    color: var(--ok);
     mix-blend-mode: multiply;
     position: relative;
   }
@@ -96,7 +96,8 @@
     content: "";
     position: absolute;
     inset: 6px;
-    border: 1px solid var(--stamp-soft);
+    border: 1px solid var(--ok);
+    opacity: 0.6;
     border-radius: inherit;
   }
 
@@ -148,6 +149,55 @@
     color: var(--ink-soft);
   }
 
+  .progresso {
+    margin: 1.75rem 0;
+  }
+
+  .progresso-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.5rem;
+  }
+
+  .progresso-label {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .progresso-percent {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ok);
+  }
+
+  .progresso-trilho {
+    width: 100%;
+    height: 10px;
+    background: rgba(43,38,32,0.08);
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+
+  .progresso-barra {
+    height: 100%;
+    background: var(--ok);
+    border-radius: 999px;
+    width: 0%;
+    transition: width 0.6s ease;
+  }
+
+  .progresso-legenda {
+    margin-top: 0.5rem;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
   .rodape {
     margin-top: 2rem;
     display: flex;
@@ -186,17 +236,28 @@
 
     <div class="stamp-zone">
       <div class="stamp">
-        <span class="stamp-word">Adiado</span>
-        <span class="stamp-sub">Nova data a definir</span>
+        <span class="stamp-word">Remarcada</span>
+        <span class="stamp-sub">29 de agosto de 2026</span>
       </div>
     </div>
 
     <div class="corpo">
-      <p>A data da prova, anteriormente marcada, foi <strong>alterada</strong>. Até o momento não há previsão oficial de quando será remarcada.</p>
+      <p>A data da prova, anteriormente marcada, foi <strong>alterada</strong>. A nova data confirmada é <strong>29 de agosto de 2026</strong>.</p>
     </div>
 
     <div class="aviso-data">
-      Assim que uma nova data for divulgada no edital, esta página deve ser atualizada.
+      Fique atento ao edital de convocação, que trará os locais e horários definitivos de prova.
+    </div>
+
+    <div class="progresso">
+      <div class="progresso-topo">
+        <span class="progresso-label">Contagem para a prova</span>
+        <span class="progresso-percent" id="progresso-percent">—</span>
+      </div>
+      <div class="progresso-trilho">
+        <div class="progresso-barra" id="progresso-barra"></div>
+      </div>
+      <div class="progresso-legenda" id="progresso-legenda">calculando...</div>
     </div>
 
     <div class="enquanto-isso">
@@ -216,6 +277,34 @@
       weekday: 'long', day: '2-digit', month: 'long', year: 'numeric'
     });
     document.getElementById('data-hoje').textContent = 'Consultado em ' + dataFormatada;
+
+    // Janela de contagem: da data original da prova (quando foi adiada) até a nova data
+    const inicioJanela = new Date('2026-08-02T00:00:00');
+    const dataProva = new Date('2026-08-29T00:00:00');
+
+    const hojeZerado = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+    const msPorDia = 1000 * 60 * 60 * 24;
+
+    const totalDias = Math.round((dataProva - inicioJanela) / msPorDia);
+    const diasRestantes = Math.ceil((dataProva - hojeZerado) / msPorDia);
+    const diasPassados = totalDias - diasRestantes;
+
+    const percentFaltando = Math.min(100, Math.max(0, Math.round((diasRestantes / totalDias) * 100)));
+    const percentDecorrido = 100 - percentFaltando;
+
+    const barra = document.getElementById('progresso-barra');
+    const percentEl = document.getElementById('progresso-percent');
+    const legendaEl = document.getElementById('progresso-legenda');
+
+    if (diasRestantes <= 0) {
+      barra.style.width = '100%';
+      percentEl.textContent = 'Prova hoje!';
+      legendaEl.textContent = 'Boa prova! 🍀';
+    } else {
+      barra.style.width = percentDecorrido + '%';
+      percentEl.textContent = percentFaltando + '% restante';
+      legendaEl.textContent = 'Faltam ' + diasRestantes + ' dia' + (diasRestantes === 1 ? '' : 's') + ' para 29/08/2026';
+    }
   </script>
 </body>
 </html>
