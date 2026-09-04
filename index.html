@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Concurso Câmara de Seropédica — Prova Remarcada</title>
+<title>Concurso Prefeitura de Resende — Analista de Sistemas</title>
 <style>
   :root {
     --paper: #EDE8DC;
@@ -36,7 +36,7 @@
     background: var(--paper-2);
     border: 1px solid var(--line);
     border-radius: 4px;
-    max-width: 560px;
+    max-width: 600px;
     width: 100%;
     padding: 3rem 2.5rem 2.5rem;
     position: relative;
@@ -85,11 +85,12 @@
     gap: 4px;
     border: 3px solid var(--ok);
     border-radius: 50% 48% 51% 49% / 49% 51% 48% 52%;
-    padding: 1.2rem 2.2rem;
-    transform: rotate(-6deg);
+    padding: 1.2rem 2rem;
+    transform: rotate(-5deg);
     color: var(--ok);
     mix-blend-mode: multiply;
     position: relative;
+    text-align: center;
   }
 
   .stamp::after {
@@ -104,8 +105,8 @@
   .stamp-word {
     font-family: Georgia, serif;
     font-weight: 700;
-    font-size: 30px;
-    letter-spacing: 0.08em;
+    font-size: 25px;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
   }
 
@@ -130,9 +131,122 @@
     border-left: 3px solid var(--stamp);
     padding: 0.9rem 1.1rem;
     font-size: 14px;
+    line-height: 1.55;
     color: var(--ink);
     margin: 1.5rem 0;
     border-radius: 0 4px 4px 0;
+  }
+
+  .status {
+    margin: 1.75rem 0;
+  }
+
+  .status-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .status-label,
+  .status-etapa {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    text-transform: uppercase;
+  }
+
+  .status-label {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+  }
+
+  .status-etapa {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ok);
+    text-align: right;
+  }
+
+  .status-trilho {
+    width: 100%;
+    height: 10px;
+    background: rgba(43,38,32,0.08);
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+
+  .status-barra {
+    height: 100%;
+    background: var(--ok);
+    border-radius: 999px;
+    width: 50%;
+  }
+
+  .etapas {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.45rem;
+    margin-top: 0.8rem;
+  }
+
+  .etapa {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 9px;
+    line-height: 1.35;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding: 0.45rem 0.25rem;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    background: rgba(255,255,255,0.12);
+  }
+
+  .etapa.ok {
+    color: var(--ok);
+    border-color: rgba(59,110,92,0.45);
+    background: rgba(59,110,92,0.07);
+    font-weight: 700;
+  }
+
+  .status-legenda {
+    margin-top: 0.7rem;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+
+  .dados {
+    margin: 1.75rem 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.65rem;
+  }
+
+  .dado {
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 0.8rem 0.65rem;
+    background: rgba(255,255,255,0.12);
+    text-align: center;
+  }
+
+  .dado strong {
+    display: block;
+    font-family: Georgia, serif;
+    font-size: 20px;
+    color: var(--ink);
+    margin-bottom: 0.2rem;
+  }
+
+  .dado span {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 9px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
   }
 
   .enquanto-isso {
@@ -146,55 +260,6 @@
   .enquanto-isso p {
     font-size: 14px;
     line-height: 1.7;
-    color: var(--ink-soft);
-  }
-
-  .progresso {
-    margin: 1.75rem 0;
-  }
-
-  .progresso-topo {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 0.5rem;
-  }
-
-  .progresso-label {
-    font-family: 'JetBrains Mono', 'Courier New', monospace;
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-  }
-
-  .progresso-percent {
-    font-family: 'JetBrains Mono', 'Courier New', monospace;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--ok);
-  }
-
-  .progresso-trilho {
-    width: 100%;
-    height: 10px;
-    background: rgba(43,38,32,0.08);
-    border-radius: 999px;
-    overflow: hidden;
-    border: 1px solid var(--line);
-  }
-
-  .progresso-barra {
-    height: 100%;
-    background: var(--ok);
-    border-radius: 999px;
-    width: 0%;
-    transition: width 0.6s ease;
-  }
-
-  .progresso-legenda {
-    margin-top: 0.5rem;
-    font-size: 12px;
     color: var(--ink-soft);
   }
 
@@ -222,54 +287,78 @@
 
   .link-edital:hover { border-bottom-color: var(--ok); }
 
-  @media (max-width: 480px) {
+  @media (max-width: 520px) {
     .doc { padding: 2.25rem 1.5rem 2rem; }
-    .stamp-word { font-size: 24px; }
+    .stamp-word { font-size: 21px; }
     h1 { font-size: 20px; }
+    .dados { grid-template-columns: 1fr; }
+    .etapas { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
 </head>
 <body>
-  <div class="doc">
-    <div class="eyebrow">Concurso Público Nº 001/2026</div>
-    <h1>Câmara Municipal de Seropédica — Analista de Tecnologia da Informação</h1>
+  <main class="doc">
+    <div class="eyebrow">Prefeitura Municipal de Resende · Concurso 2026</div>
+    <h1>Analista de Sistemas — preparação para o novo concurso de Resende/RJ</h1>
 
     <div class="stamp-zone">
-      <div class="stamp">
-        <span class="stamp-word">Remarcada</span>
-        <span class="stamp-sub">29 de agosto de 2026</span>
+      <div class="stamp" aria-label="Situação: banca definida">
+        <span class="stamp-word">Banca definida</span>
+        <span class="stamp-sub">IGECS · fase pré-edital</span>
       </div>
     </div>
 
     <div class="corpo">
-      <p>A data da prova, anteriormente marcada, foi <strong>alterada</strong>. A nova data confirmada é <strong>29 de agosto de 2026</strong>.</p>
+      <p>O novo concurso da Prefeitura de Resende está em preparação. O <strong>Instituto de Gestão de Cidades (IGECS)</strong> foi definido como banca organizadora.</p>
+      <p>Para <strong>Analista de Sistemas</strong>, o termo de referência prevê <strong>5 vagas</strong>, com jornada indicada de <strong>20 horas semanais</strong>.</p>
+    </div>
+
+    <div class="dados" aria-label="Dados previstos para Analista de Sistemas">
+      <div class="dado">
+        <strong>5</strong>
+        <span>vagas previstas</span>
+      </div>
+      <div class="dado">
+        <strong>20h</strong>
+        <span>jornada prevista</span>
+      </div>
+      <div class="dado">
+        <strong>IGECS</strong>
+        <span>banca organizadora</span>
+      </div>
     </div>
 
     <div class="aviso-data">
-      Fique atento ao edital de convocação, que trará os locais e horários definitivos de prova.
+      <strong>Pré-edital:</strong> a data da prova, o período de inscrições, os requisitos definitivos, a remuneração e o conteúdo programático deverão ser confirmados no edital de abertura.
     </div>
 
-    <div class="progresso">
-      <div class="progresso-topo">
-        <span class="progresso-label">Contagem para a prova</span>
-        <span class="progresso-percent" id="progresso-percent">—</span>
+    <section class="status" aria-label="Etapa atual do concurso">
+      <div class="status-topo">
+        <span class="status-label">Andamento do concurso</span>
+        <span class="status-etapa">Etapa 2 de 4</span>
       </div>
-      <div class="progresso-trilho">
-        <div class="progresso-barra" id="progresso-barra"></div>
+      <div class="status-trilho" aria-hidden="true">
+        <div class="status-barra"></div>
       </div>
-      <div class="progresso-legenda" id="progresso-legenda">calculando...</div>
-    </div>
+      <div class="etapas">
+        <div class="etapa ok">Preparação</div>
+        <div class="etapa ok">Banca definida</div>
+        <div class="etapa">Edital</div>
+        <div class="etapa">Prova</div>
+      </div>
+      <div class="status-legenda">Situação acompanhada em 04/09/2026: edital de abertura ainda aguardado.</div>
+    </section>
 
     <div class="enquanto-isso">
-      <div class="eyebrow">Enquanto isso</div>
-      <p>O adiamento não muda o conteúdo cobrado — só o prazo. Vale aproveitar o tempo extra para reforçar os pontos mais fracos do edital.</p>
+      <div class="eyebrow">Enquanto o edital não sai</div>
+      <p>Vale manter o estudo de conhecimentos específicos de TI e usar o perfil de cobrança do IGECS como referência provisória. Quando o edital for publicado, o planejamento deve ser ajustado imediatamente ao conteúdo oficial.</p>
     </div>
 
     <div class="rodape">
       <span class="data-hoje" id="data-hoje"></span>
-      <a class="link-edital" href="https://www.consulpam.com.br/index.php?menu=concursos&acao=ver&id=828" target="_blank" rel="noopener noreferrer">Ver edital e informações do concurso →</a>
+      <a class="link-edital" href="https://resende.rj.gov.br/recursos-humanos" target="_blank" rel="noopener noreferrer">Acompanhar concursos no site da Prefeitura de Resende →</a>
     </div>
-  </div>
+  </main>
 
   <script>
     const hoje = new Date();
@@ -277,34 +366,6 @@
       weekday: 'long', day: '2-digit', month: 'long', year: 'numeric'
     });
     document.getElementById('data-hoje').textContent = 'Consultado em ' + dataFormatada;
-
-    // Janela de contagem: da data original da prova (quando foi adiada) até a nova data
-    const inicioJanela = new Date('2026-08-02T00:00:00');
-    const dataProva = new Date('2026-08-29T00:00:00');
-
-    const hojeZerado = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
-    const msPorDia = 1000 * 60 * 60 * 24;
-
-    const totalDias = Math.round((dataProva - inicioJanela) / msPorDia);
-    const diasRestantes = Math.ceil((dataProva - hojeZerado) / msPorDia);
-    const diasPassados = totalDias - diasRestantes;
-
-    const percentFaltando = Math.min(100, Math.max(0, Math.round((diasRestantes / totalDias) * 100)));
-    const percentDecorrido = 100 - percentFaltando;
-
-    const barra = document.getElementById('progresso-barra');
-    const percentEl = document.getElementById('progresso-percent');
-    const legendaEl = document.getElementById('progresso-legenda');
-
-    if (diasRestantes <= 0) {
-      barra.style.width = '100%';
-      percentEl.textContent = 'Prova hoje!';
-      legendaEl.textContent = 'Boa prova! 🍀';
-    } else {
-      barra.style.width = percentDecorrido + '%';
-      percentEl.textContent = percentFaltando + '% restante';
-      legendaEl.textContent = 'Faltam ' + diasRestantes + ' dia' + (diasRestantes === 1 ? '' : 's') + ' para 29/08/2026';
-    }
   </script>
 </body>
 </html>
